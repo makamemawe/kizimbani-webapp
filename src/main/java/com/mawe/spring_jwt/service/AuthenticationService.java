@@ -8,10 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mawe.spring_jwt.model.AuthenticationResponse;
+import com.mawe.spring_jwt.model.Role;
 import com.mawe.spring_jwt.model.Token;
 import com.mawe.spring_jwt.model.User;
 import com.mawe.spring_jwt.repository.TokenRepository;
 import com.mawe.spring_jwt.repository.UserRepository;
+
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class AuthenticationService {
@@ -38,15 +41,25 @@ public class AuthenticationService {
         this.tokenRepository = tokenRepository;
     }
 
+    @PostConstruct
+    public void createAdminAccount() {
+        User adminAccount = repository.findByRole(Role.ADMIN);
+        if (adminAccount == null) {
+            User user = new User();
+            user.setName("admin");
+            user.setEmail("admin@gmail.com");
+            user.setPassword(passwordEncoder.encode("admin"));
+            user.setRole(Role.ADMIN);
+            repository.save(user);
+        }
+    }
+
     public AuthenticationResponse register(User request) {
         User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setUsername(request.getUsername());
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        user.setRole(request.getRole());
-
+        user.setRole(Role.USER);
         user = repository.save(user);
 
         String jwt = jwtService.generateToken(user);
@@ -67,10 +80,10 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(User request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getEmail(),
                         request.getPassword()));
 
-        User user = repository.findByUsername(request.getUsername()).orElseThrow();
+        User user = repository.findByEmail(request.getUsername()).orElseThrow();
         String token = jwtService.generateToken(user);
 
         revokeAllTokenByUser(user);
@@ -90,6 +103,10 @@ public class AuthenticationService {
 
         }
         tokenRepository.saveAll(validTokListByUser);
+    }
+
+    public boolean hasUserWithEmail(String email) {
+        return repository.findByEmail(email) != null;
     }
 
 }

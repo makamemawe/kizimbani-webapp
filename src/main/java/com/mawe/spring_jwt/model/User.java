@@ -26,20 +26,27 @@ public class User implements UserDetails {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "first_name")
-    private String firstName;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "last_name")
-    private String lastName;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "username")
-    private String username;
+    // @Column(name = "username")
+    // private String username;
 
     @Column(name = "password")
     private String password;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    // private Byte[] img;
+
+    // public UserDTO mapUserToUserDTO() {
+
+    // return new UserDTO(id, email, role, password);
+    // }
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
@@ -60,29 +67,29 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return this.firstName;
+    public String getName() {
+        return this.name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return this.lastName;
+    public String getEmail() {
+        return this.email;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUsername() {
-        return this.username;
-    }
+    // public String getUsername() {
+    // return this.username;
+    // }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    // public void setUsername(String username) {
+    // this.username = username;
+    // }
 
     public String getPassword() {
         return this.password;
@@ -128,6 +135,12 @@ public class User implements UserDetails {
     public boolean isEnabled() {
 
         return true;
+    }
+
+    @Override
+    public String getUsername() {
+
+        return email;
     }
 
 }
