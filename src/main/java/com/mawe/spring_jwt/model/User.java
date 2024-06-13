@@ -2,6 +2,7 @@ package com.mawe.spring_jwt.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,24 +33,15 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    // @Column(name = "username")
-    // private String username;
-
     @Column(name = "password")
     private String password;
 
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    // private Byte[] img;
-
-    // public UserDTO mapUserToUserDTO() {
-
-    // return new UserDTO(id, email, role, password);
-    // }
-
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
+
 
     public List<Token> getTokens() {
         return this.tokens;
@@ -82,14 +74,6 @@ public class User implements UserDetails {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    // public String getUsername() {
-    // return this.username;
-    // }
-
-    // public void setUsername(String username) {
-    // this.username = username;
-    // }
 
     public String getPassword() {
         return this.password;

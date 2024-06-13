@@ -43,6 +43,11 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(
                                                 req -> req.requestMatchers("/authenticate/**", "/sign-up/**",
                                                                 "/register/**",
+                                                                "/api/admin/categories/**",
+                                                                "/api/admin/product/categoryId",
+                                                                "/api/admin/product/productId",
+                                                                "/api/admin/category",
+                                                                "/api/admin/products",
                                                                 "/v3/api-docs/**",
                                                                 "/v3/api-docs",
                                                                 "/swagger-ui",

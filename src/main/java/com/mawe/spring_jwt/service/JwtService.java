@@ -1,6 +1,7 @@
 package com.mawe.spring_jwt.service;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.crypto.SecretKey;
@@ -71,12 +72,17 @@ public class JwtService {
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
+                .claim("name",user.getName())
+                .claim("name",user.getEmail())
+
+                .claim("role", user.getRole())
                 .signWith(getSigniKey())
                 .compact();
-
         return token;
 
     }
+
+
 
     private SecretKey getSigniKey() {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
